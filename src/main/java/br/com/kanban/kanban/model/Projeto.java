@@ -1,9 +1,6 @@
 package br.com.kanban.kanban.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Projeto {
@@ -13,6 +10,9 @@ public class Projeto {
 
     private Integer nome;
 
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "quadro_id")
+//    private Quadro quadro;
     public Integer getNome() {
         return nome;
     }
@@ -20,5 +20,13 @@ public class Projeto {
     public void setNome(Integer nome) {
         this.nome = nome;
     }
+
+//    public Quadro getQuadro() {
+//        return quadro;
+//    }
+//
+//    public void setQuadro(Quadro quadro) {
+//        this.quadro = quadro;
+//    }
 }
 
