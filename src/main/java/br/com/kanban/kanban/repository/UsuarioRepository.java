@@ -13,11 +13,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findById(Long id);
 
+    void deleteById(Long id);
+
     @SuppressWarnings("unchecked")
-    Usuario save(Usuario usuario);
-
-
-   
-
-    
+    Usuario save(Usuario usuario);    
 }

@@ -1,6 +1,7 @@
 package br.com.kanban.kanban.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,16 @@ public class UsuarioService {
                     return usuarioRepository.save(usuario);
                 })
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + id));
+    }
+
+
+    public void deleteUsuarioById(Long id) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if (usuarioOptional.isPresent()) {
+            usuarioRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Usuário não encontrado com o ID: " + id);
+        }
     }
 
    
