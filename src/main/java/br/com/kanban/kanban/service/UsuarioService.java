@@ -33,6 +33,18 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    public Usuario alterarUsuario(Long id, Usuario usuarioNovo) {
+        return usuarioRepository.findById(id)
+                .map(usuario -> {
+                    usuario.setNome(usuarioNovo.getNome());
+                    usuario.setEmail(usuarioNovo.getEmail());
+                    usuario.setSenha(usuarioNovo.getSenha());
+                    // Você pode adicionar mais campos aqui, se necessário
+                    return usuarioRepository.save(usuario);
+                })
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + id));
+    }
+
    
 }
 

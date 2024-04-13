@@ -16,6 +16,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @SuppressWarnings("unchecked")
     Usuario save(Usuario usuario);
 
+
    
 
     
