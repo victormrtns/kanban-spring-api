@@ -9,37 +9,47 @@ import java.util.List;
 public class Quadro implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long id; 
+    
+    @OneToMany(mappedBy = "quadro", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Coluna> coluna;
 
-    private Integer colunas;
 
-    @OneToMany(mappedBy = "quadro",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private List<Card> cards;
+    @ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable( name = "usuarios-quadros", 
+                uniqueConstraints = @UniqueConstraint (
+                columnNames = {"usuario_id","quadro_id"}, 
+                name = "unique_user_quadro"
+                ), 
+	            joinColumns = @JoinColumn(name = "quadro_id", 
+                referencedColumnName = "id", 
+                table = "quadro", 
+                unique = false
+                ), 
+	            inverseJoinColumns = @JoinColumn (
+                    name = "usuario_id", 
+                    referencedColumnName = "id", 
+                    table = "usuario", 
+                    unique = false
+                    
+                )
+            )    
+	private List<Usuario> usuarios;
 
-//    @OneToOne(mappedBy = "quadro")
-//    private Quadro projeto;
-
-    public Integer getColunas() {
-        return colunas;
+    public Long getId() {
+        return id;
     }
 
-    public void setColunas(Integer colunas) {
-        this.colunas = colunas;
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+    public List<Coluna> getColuna() {
+        return coluna;
     }
 
-    public List<Card> getCards() {
-        return cards;
+    public void setColuna(List<Coluna> coluna) {
+        this.coluna = coluna;
     }
 
-    public void setCards(List<Card> cards) {
-        this.cards = cards;
-    }
-
-//    public Quadro getProjeto() {
-//        return projeto;
-//    }
-//
-//    public void setProjeto(Quadro projeto) {
-//        this.projeto = projeto;
-//    }
 }

@@ -1,20 +1,31 @@
 package br.com.kanban.kanban.model;
 
+import java.io.Serializable;
+
 import jakarta.persistence.*;
 
 @Entity
-public class Card {
-     @Id
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
+public class Card implements Serializable {
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id_card;  
 
     private String nome;
     private String descricao;
     private String status;
-
+    
     @ManyToOne
-    @JoinColumn(name ="quadro_id")
-    private Quadro quadro;
+    @JoinColumn(name = "coluna_id")
+    private Coluna coluna;
+
+    public Coluna getColuna() {
+        return coluna;
+    }
+    public void setColuna(Coluna coluna) {
+        this.coluna = coluna;
+    }
     public Long getId_card() {
         return id_card;
     }
@@ -38,13 +49,5 @@ public class Card {
     }
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Quadro getQuadro() {
-        return quadro;
-    }
-
-    public void setQuadro(Quadro quadro) {
-        this.quadro = quadro;
     }
 }
