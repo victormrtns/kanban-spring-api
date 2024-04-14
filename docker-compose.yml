@@ -18,9 +18,6 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data  # Volume para persistir dados do PostgreSQL
+      - "5432:5432"  
     container_name: kanban-app-container
-volumes:
-  postgres_data:  # Definindo o volume nomeado
+    

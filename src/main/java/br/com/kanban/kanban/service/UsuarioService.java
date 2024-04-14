@@ -40,7 +40,7 @@ public class UsuarioService {
                     usuario.setNome(usuarioNovo.getNome());
                     usuario.setEmail(usuarioNovo.getEmail());
                     usuario.setSenha(usuarioNovo.getSenha());
-                    // Você pode adicionar mais campos aqui, se necessário
+                    usuario.setQuadros(usuarioNovo.getQuadros());
                     return usuarioRepository.save(usuario);
                 })
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + id));
