@@ -1,7 +1,10 @@
 package br.com.kanban.kanban.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,7 +20,7 @@ import jakarta.persistence.UniqueConstraint;
 public class Usuario implements Serializable {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;  
 
     private String nome;
@@ -25,7 +28,8 @@ public class Usuario implements Serializable {
     private String email;
     
     private String senha;
-
+    
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable( name = "usuarios-quadros", 
                 uniqueConstraints = @UniqueConstraint (
@@ -45,7 +49,7 @@ public class Usuario implements Serializable {
                     //updatable = false,
                 )
             )
-    private List<Quadro> quadros;
+    private List<Quadro> quadros = new ArrayList<>();
     
     public List<Quadro> getQuadros() {
         return quadros;
