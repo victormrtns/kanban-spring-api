@@ -15,16 +15,17 @@ public class Card implements Serializable {
     private String nome;
     private String descricao;
     private String status;
-    
-    @ManyToOne
-    @JoinColumn(name = "coluna_id")
-    private Coluna coluna;
 
-    public Coluna getColuna() {
-        return coluna;
+    @ManyToOne
+    @JoinColumn(name = "quadro_id")
+    private Quadro quadro; 
+
+   
+    public Quadro getQuadro() {
+        return quadro;
     }
-    public void setColuna(Coluna coluna) {
-        this.coluna = coluna;
+    public void setQuadro(Quadro quadro) {
+        this.quadro = quadro;
     }
     public Long getId_card() {
         return id_card;
