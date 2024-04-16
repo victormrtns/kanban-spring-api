@@ -1,9 +1,12 @@
 package br.com.kanban.kanban.controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
+import br.com.kanban.kanban.dto.ResponseDto;
+import br.com.kanban.kanban.dto.createQuadroDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +27,30 @@ public class QuadroController {
     private UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<Quadro> criarQuadro(@RequestBody Quadro quadro) {
-        Quadro novoQuadro = quadroService.criarQuadro(quadro);
-
-          // Atualizar usuários associados com o novo quadro
-          for (Usuario usuario : quadro.getUsuarios()) {
-            usuario.getQuadros().add(novoQuadro);
-            usuarioService.alterarUsuario(usuario.getId(), usuario);
+    public ResponseEntity<createQuadroDto> criarQuadro(@RequestBody createQuadroDto quadroDto) {
+        Usuario usuario = new Usuario();
+        usuario = usuarioService.findById(quadroDto.getUsuario_id());
+        if(usuario == null){
+            return ResponseEntity.badRequest().build();
         }
-        return new ResponseEntity<>(novoQuadro, HttpStatus.CREATED);
+
+        List<Quadro> quadrosDoUsuario = usuario.getQuadros();
+        for(Quadro quadroExistente : quadrosDoUsuario) {
+            if(quadroExistente.getNome().equals(quadroDto.getNome())) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+        List<Usuario> lista_usuario = new ArrayList<>();
+        lista_usuario.add(usuario);
+
+        Quadro quadro = new Quadro();
+        quadro.setNome(quadroDto.getNome());
+        quadro.setUsuarios(lista_usuario);
+
+        quadroService.criarQuadro(quadro);
+
+        return ResponseEntity.ok(quadroDto);
     }
 
     @GetMapping
@@ -50,4 +68,10 @@ public class QuadroController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteQuadroById(@PathVariable Long id) {
+        quadroService.deleteQuadroById(id);
+    }
+
 }
