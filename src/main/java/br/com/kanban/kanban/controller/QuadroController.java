@@ -7,6 +7,8 @@ import java.util.List;
 
 import br.com.kanban.kanban.dto.ResponseDto;
 import br.com.kanban.kanban.dto.createQuadroDto;
+import br.com.kanban.kanban.dto.updateQuadroDto;
+import br.com.kanban.kanban.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +54,28 @@ public class QuadroController {
 
         return ResponseEntity.ok(quadroDto);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Quadro> updateQuadro(@PathVariable Long id,@RequestBody updateQuadroDto quadroDto) {
+        Quadro quadro = quadroService.getQuadroById(id);
+        List<Usuario> usuarios = new ArrayList<>();
+        if(quadro == null){
+            return ResponseEntity.badRequest().build();
+        }
+        for(Long id_usuario: quadroDto.getUsuarios_id()){
+            Usuario usuario = usuarioService.findById(id_usuario);
+            if(usuario != null){
+                usuarios.add(usuario);
+            }
+        }
+
+        quadro.setUsuarios(usuarios);
+        quadro.setNome(quadroDto.getNome());
+        Quadro novoQuadro = quadroService.alterarQuadro(id,quadro);
+        return ResponseEntity.ok(novoQuadro);
+
+    }
+
 
     @GetMapping
     public ResponseEntity<List<Quadro>> getAllQuadros() {

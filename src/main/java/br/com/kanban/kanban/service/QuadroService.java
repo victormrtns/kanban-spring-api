@@ -43,6 +43,16 @@ public class QuadroService {
             throw new RuntimeException("Quadro não encontrado com o ID: " + id);
         }
     }
+
+    public Quadro alterarQuadro(Long id, Quadro quadroNovo) {
+        return quadroRepository.findById(id)
+                .map(quadro -> {
+                    quadro.setNome(quadroNovo.getNome());
+                    quadro.setUsuarios(quadroNovo.getUsuarios());
+                    return quadroRepository.save(quadro);
+                })
+                .orElseThrow(() -> new RuntimeException("Quadro não encontrado com o ID: " + id));
+    }
 }
 
     
