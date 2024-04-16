@@ -23,7 +23,6 @@ public class QuadroService {
   private UsuarioService usuarioService;
 
     public Quadro criarQuadro(Quadro quadro) {
-        // Adicione qualquer lógica de validação aqui, se necessário
         return quadroRepository.save(quadro);
     }
 
