@@ -1,23 +1,21 @@
 version: '3'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-    container_name: kan-ban-app-backend-container
-
-  db:
-    image: postgres
+  #  app:
+  #    build:
+  #      context: .
+  #      dockerfile: DockerFile
+  #    ports:
+  #      - "8080:8080"
+  #    depends_on:
+  #      - postgres
+  #    container_name: kanban-backend-container
+  postgres:
+    image: postgres:13.1
     environment:
       POSTGRES_DB: kanban
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: senha
     ports:
-      - "5432:5432"  
-    container_name: kanban-app-container
-    
+      - "5432:5432"
+    container_name: kanban-db-container
