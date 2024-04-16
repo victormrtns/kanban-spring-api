@@ -3,7 +3,6 @@ package br.com.kanban.kanban.dto;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.kanban.kanban.model.Coluna;
 
 public class createQuadroDto {
     private Long usuario_id;
