@@ -2,9 +2,10 @@ package br.com.kanban.kanban.service;
 
 
 import java.util.List;
+import java.util.Optional;
 
 
-
+import br.com.kanban.kanban.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,6 @@ public class QuadroService {
   private UsuarioService usuarioService;
 
     public Quadro criarQuadro(Quadro quadro) {
-        // Adicione qualquer lógica de validação aqui, se necessário
         return quadroRepository.save(quadro);
     }
 
@@ -32,6 +32,25 @@ public class QuadroService {
 
     public Quadro getQuadroById(Long id) {
         return quadroRepository.findById(id).orElse(null);
+    }
+
+    public void deleteQuadroById(Long id) {
+        Optional<Quadro> quadroOptional = quadroRepository.findById(id);
+        if (quadroOptional.isPresent()) {
+            quadroRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Quadro não encontrado com o ID: " + id);
+        }
+    }
+
+    public Quadro alterarQuadro(Long id, Quadro quadroNovo) {
+        return quadroRepository.findById(id)
+                .map(quadro -> {
+                    quadro.setNome(quadroNovo.getNome());
+                    quadro.setUsuarios(quadroNovo.getUsuarios());
+                    return quadroRepository.save(quadro);
+                })
+                .orElseThrow(() -> new RuntimeException("Quadro não encontrado com o ID: " + id));
     }
 }
 

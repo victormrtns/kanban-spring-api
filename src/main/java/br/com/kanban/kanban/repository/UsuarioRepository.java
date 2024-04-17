@@ -12,6 +12,7 @@ import br.com.kanban.kanban.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findById(Long id);
+    Optional<Usuario> findByEmail(String email);
 
     void deleteById(Long id);
 

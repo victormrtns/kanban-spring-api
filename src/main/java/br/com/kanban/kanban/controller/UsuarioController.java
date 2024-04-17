@@ -55,12 +55,6 @@ public class UsuarioController {
         
     }
 
-    @PostMapping()
-    public ResponseEntity<Usuario> criarUsuario(@RequestBody createUserDto dto) {
-        Usuario usuario = modelMapper.map(dto, Usuario.class);
-        Usuario novoUsuario = usuarioService.salvarUsuario(usuario);
-        return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
-    }
 
     @GetMapping
     public List<getUsuarioDto> getAllUsuarios() {
@@ -72,6 +66,8 @@ public class UsuarioController {
         }
         return usuariosDto;
     }
+
+    
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> alterarUsuario(@PathVariable Long id, @RequestBody updateUserDto dto) {
         // Convertendo UpdateUserDto para Usuario manualmente

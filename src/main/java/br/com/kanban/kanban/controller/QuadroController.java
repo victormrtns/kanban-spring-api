@@ -1,9 +1,14 @@
 package br.com.kanban.kanban.controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
+import br.com.kanban.kanban.dto.ResponseDto;
+import br.com.kanban.kanban.dto.createQuadroDto;
+import br.com.kanban.kanban.dto.updateQuadroDto;
+import br.com.kanban.kanban.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +29,53 @@ public class QuadroController {
     private UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<Quadro> criarQuadro(@RequestBody Quadro quadro) {
-        Quadro novoQuadro = quadroService.criarQuadro(quadro);
-
-          // Atualizar usuários associados com o novo quadro
-          for (Usuario usuario : quadro.getUsuarios()) {
-            usuario.getQuadros().add(novoQuadro);
-            usuarioService.alterarUsuario(usuario.getId(), usuario);
+    public ResponseEntity<createQuadroDto> criarQuadro(@RequestBody createQuadroDto quadroDto) {
+        Usuario usuario = new Usuario();
+        usuario = usuarioService.findById(quadroDto.getUsuario_id());
+        if(usuario == null){
+            return ResponseEntity.badRequest().build();
         }
-        return new ResponseEntity<>(novoQuadro, HttpStatus.CREATED);
+
+        List<Quadro> quadrosDoUsuario = usuario.getQuadros();
+        for(Quadro quadroExistente : quadrosDoUsuario) {
+            if(quadroExistente.getNome().equals(quadroDto.getNome())) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+        List<Usuario> lista_usuario = new ArrayList<>();
+        lista_usuario.add(usuario);
+
+        Quadro quadro = new Quadro();
+        quadro.setNome(quadroDto.getNome());
+        quadro.setUsuarios(lista_usuario);
+
+        quadroService.criarQuadro(quadro);
+
+        return ResponseEntity.ok(quadroDto);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Quadro> updateQuadro(@PathVariable Long id,@RequestBody updateQuadroDto quadroDto) {
+        Quadro quadro = quadroService.getQuadroById(id);
+        List<Usuario> usuarios = new ArrayList<>();
+        if(quadro == null){
+            return ResponseEntity.badRequest().build();
+        }
+        for(Long id_usuario: quadroDto.getUsuarios_id()){
+            Usuario usuario = usuarioService.findById(id_usuario);
+            if(usuario != null){
+                usuarios.add(usuario);
+            }
+        }
+
+        quadro.setUsuarios(usuarios);
+        quadro.setNome(quadroDto.getNome());
+        Quadro novoQuadro = quadroService.alterarQuadro(id,quadro);
+        return ResponseEntity.ok(novoQuadro);
+
+    }
+
 
     @GetMapping
     public ResponseEntity<List<Quadro>> getAllQuadros() {
@@ -50,4 +92,10 @@ public class QuadroController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteQuadroById(@PathVariable Long id) {
+        quadroService.deleteQuadroById(id);
+    }
+
 }

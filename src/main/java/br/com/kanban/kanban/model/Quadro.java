@@ -10,10 +10,14 @@ public class Quadro implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id; 
-    
-    @OneToMany(mappedBy = "quadro", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Coluna> coluna;
 
+
+    private String nome;
+    @OneToMany(mappedBy = "quadro", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Card> card;
+
+
+   
 
     @ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable( name = "usuarios-quadros", 
@@ -52,12 +56,20 @@ public class Quadro implements Serializable {
         this.id = id;
     }
     
-    public List<Coluna> getColuna() {
-        return coluna;
+    public List<Card> getCard() {
+        return card;
     }
 
-    public void setColuna(List<Coluna> coluna) {
-        this.coluna = coluna;
+    public void setCard(List<Card> card) {
+        this.card = card;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+   
 }
