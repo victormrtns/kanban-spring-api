@@ -3,11 +3,12 @@ package br.com.kanban.kanban.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
-import br.com.kanban.kanban.dto.ResponseDto;
 import br.com.kanban.kanban.dto.createQuadroDto;
 import br.com.kanban.kanban.dto.updateQuadroDto;
+import br.com.kanban.kanban.infra.security.TokenService;
 import br.com.kanban.kanban.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import br.com.kanban.kanban.service.QuadroService;
 import br.com.kanban.kanban.service.UsuarioService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/quadros")
 public class QuadroController {
 
@@ -28,6 +30,11 @@ public class QuadroController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private TokenService tokenService;
     @PostMapping
     public ResponseEntity<createQuadroDto> criarQuadro(@RequestBody createQuadroDto quadroDto) {
         Usuario usuario = new Usuario();
@@ -81,6 +88,14 @@ public class QuadroController {
     public ResponseEntity<List<Quadro>> getAllQuadros() {
         List<Quadro> quadros = quadroService.getAllQuadros();
         return new ResponseEntity<>(quadros, HttpStatus.OK);
+    }
+
+    @GetMapping("/email")
+    public String getAllQuadrosByEmail(@RequestHeader("Authorization") String bearerToken ) {
+        bearerToken = bearerToken.replace("Bearer ","");
+        String email = tokenService.validateToken(bearerToken);
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+        return email;
     }
 
     @GetMapping("/{id}")

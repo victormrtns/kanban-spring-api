@@ -33,6 +33,11 @@ public class TokenService {
     public String validateToken(String token){
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
+            System.out.println(JWT.require(algorithm)
+                    .withIssuer("kanban-spring-api")
+                    .build()
+                    .verify(token)
+                    .getSubject());
             return JWT.require(algorithm)
                     .withIssuer("kanban-spring-api")
                     .build()
