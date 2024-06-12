@@ -1,5 +1,6 @@
 package br.com.kanban.kanban.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class Quadro implements Serializable {
 
     private String nome;
     @OneToMany(mappedBy = "quadro", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<Card> card;
 
 

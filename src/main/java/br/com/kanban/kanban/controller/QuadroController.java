@@ -91,11 +91,15 @@ public class QuadroController {
     }
 
     @GetMapping("/email")
-    public String getAllQuadrosByEmail(@RequestHeader("Authorization") String bearerToken ) {
+    public Optional<List<Quadro>> getAllQuadrosByEmail(@RequestHeader("Authorization") String bearerToken ) {
         bearerToken = bearerToken.replace("Bearer ","");
         String email = tokenService.validateToken(bearerToken);
         Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
-        return email;
+        if(usuario.isPresent()){
+            Usuario newUsuario = usuario.get();
+            return Optional.ofNullable(newUsuario.getQuadros());
+        }
+        return null;
     }
 
     @GetMapping("/{id}")
