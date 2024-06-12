@@ -2,6 +2,7 @@ package br.com.kanban.kanban.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -18,6 +19,7 @@ public class Card implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "quadro_id")
+    @JsonManagedReference
     private Quadro quadro; 
 
    
