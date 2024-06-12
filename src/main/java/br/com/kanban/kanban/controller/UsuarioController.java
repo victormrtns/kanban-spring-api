@@ -60,6 +60,8 @@ public class UsuarioController {
         }
         return usuariosDto;
     }
+
+    
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> alterarUsuario(@PathVariable Long id, @RequestBody updateUserDto dto) {
         // Convertendo UpdateUserDto para Usuario manualmente
