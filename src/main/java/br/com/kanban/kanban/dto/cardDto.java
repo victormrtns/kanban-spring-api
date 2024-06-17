@@ -1,7 +1,6 @@
 package br.com.kanban.kanban.dto;
 
 public class cardDto {
-    private Long id;
     private String nome;
     private String descricao;
     private String status;
@@ -14,14 +13,6 @@ public class cardDto {
 
     public void setQuadroId(Long quadroId) {
         this.quadroId = quadroId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNome() {

@@ -91,9 +91,9 @@ public class CardService {
         card.setQuadro(quadro);
 
         if (card instanceof Bug && "BUG".equalsIgnoreCase(cardDTO.getType())) {
-            ((Bug) card).setBug_id(cardDTO.getId());
+            ((Bug) card).setBug_id(((Bug) card).getBug_id());
         } else if (card instanceof Feature && "FEATURE".equalsIgnoreCase(cardDTO.getType())) {
-            ((Feature) card).setFeature_id(cardDTO.getId());
+            ((Feature) card).setFeature_id(((Feature) card).getFeature_id());
         }
 
         return cardRepository.save(card);
