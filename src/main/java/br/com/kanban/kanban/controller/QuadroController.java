@@ -36,50 +36,57 @@ public class QuadroController {
     @Autowired
     private TokenService tokenService;
     @PostMapping
-    public ResponseEntity<createQuadroDto> criarQuadro(@RequestBody createQuadroDto quadroDto) {
-        Usuario usuario = new Usuario();
-        usuario = usuarioService.findById(quadroDto.getUsuario_id());
-        if(usuario == null){
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<createQuadroDto> criarQuadro(@RequestHeader("Authorization") String bearerToken,@RequestBody createQuadroDto quadroDto) {
 
-        List<Quadro> quadrosDoUsuario = usuario.getQuadros();
-        for(Quadro quadroExistente : quadrosDoUsuario) {
-            if(quadroExistente.getNome().equals(quadroDto.getNome())) {
-                return ResponseEntity.badRequest().build();
+        bearerToken = bearerToken.replace("Bearer ","");
+        String email = tokenService.validateToken(bearerToken);
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+        if(usuario.isPresent()){
+            Usuario newUsuario = usuario.get();
+            List<Quadro> quadrosDoUsuario = newUsuario.getQuadros();
+            for(Quadro quadroExistente : quadrosDoUsuario) {
+                if(quadroExistente.getNome().equals(quadroDto.getNome())) {
+                    return ResponseEntity.badRequest().build();
+                }
             }
+            List<Usuario> lista_usuario = new ArrayList<>();
+            lista_usuario.add(newUsuario);
+
+            Quadro quadro = new Quadro();
+            quadro.setNome(quadroDto.getNome());
+            quadro.setUsuarios(lista_usuario);
+
+            quadroService.criarQuadro(quadro);
+
+            return ResponseEntity.ok(quadroDto);
         }
 
-        List<Usuario> lista_usuario = new ArrayList<>();
-        lista_usuario.add(usuario);
+        return ResponseEntity.badRequest().build();
 
-        Quadro quadro = new Quadro();
-        quadro.setNome(quadroDto.getNome());
-        quadro.setUsuarios(lista_usuario);
-
-        quadroService.criarQuadro(quadro);
-
-        return ResponseEntity.ok(quadroDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Quadro> updateQuadro(@PathVariable Long id,@RequestBody updateQuadroDto quadroDto) {
+    public ResponseEntity<Quadro> updateQuadro(@RequestHeader("Authorization") String bearerToken,@PathVariable Long id,@RequestBody updateQuadroDto quadroDto) {
+
+        bearerToken = bearerToken.replace("Bearer ","");
+        String email = tokenService.validateToken(bearerToken);
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+
         Quadro quadro = quadroService.getQuadroById(id);
-        List<Usuario> usuarios = new ArrayList<>();
         if(quadro == null){
             return ResponseEntity.badRequest().build();
         }
-        for(Long id_usuario: quadroDto.getUsuarios_id()){
-            Usuario usuario = usuarioService.findById(id_usuario);
-            if(usuario != null){
-                usuarios.add(usuario);
-            }
+        if(usuario.isPresent()){
+            Usuario newUsuario = usuario.get();
+            List<Usuario> usuarios = new ArrayList<>();
+            usuarios.add(newUsuario);
+            quadro.setUsuarios(usuarios);
+            quadro.setNome(quadroDto.getNome());
+            Quadro novoQuadro = quadroService.alterarQuadro(id,quadro);
+            return ResponseEntity.ok(novoQuadro);
         }
 
-        quadro.setUsuarios(usuarios);
-        quadro.setNome(quadroDto.getNome());
-        Quadro novoQuadro = quadroService.alterarQuadro(id,quadro);
-        return ResponseEntity.ok(novoQuadro);
+        return ResponseEntity.badRequest().build();
 
     }
 
